@@ -3,32 +3,9 @@ import sys
 import argparse
 import numpy as np
 import time
-import itertools
 
 from knn import KNN
-
-def generate_combinations(N, k):
-    '''
-        A function for N choose k
-    '''
-    elements = list(range(N))
-    combinations = list(itertools.combinations(elements, k))
-    return combinations
-
-def forward_search(feats, labels):
-    total_features = feats.shape[1]
-
-    for num_feats in range(total_features):
-        num_feats += 1
-
-        feature_sets = generate_combinations(total_features, num_feats)
-
-        for feature_set in feature_sets:
-            selected_feat = feats[:, feature_set]
-
-            knn = KNN(selected_feat, labels)
-            print(f"KKK {feature_set}", knn.leave_one_out_val())
-
+from search import forward_search, backward_search
 
 def main(args):
     '''
@@ -39,16 +16,23 @@ def main(args):
     if args.debug:
         print("Args: ", args)
 
-    data = np.loadtxt(args.test_file_path)
+    data = np.loadtxt(args.test_data)
     class_lables, features = data[:,0], data[:,1:]
 
     print("data ", features.shape, class_lables.shape)
 
-    knn = KNN(k = args.k, data = features, labels = class_lables)
-    knn.normalize_data()
-    print("data ", knn.leave_one_out_val())
+    knn = KNN(k = args.k
+        , data = features
+        , labels = class_lables
+        , normalize = args.normalize_data
+        , norm_type = args.norm_type)
 
-    forward_search(features, class_lables)
+    print("Leave one out validation accuray with using all the features: ", knn.leave_one_out_val())
+
+    if args.algorithm == 'forward_selection':
+        acc, feats = forward_search(features, class_lables, args)
+    else:
+        acc, feats = backward_search(features, class_lables, args)
 
 
 if __name__ == "__main__":
@@ -56,11 +40,16 @@ if __name__ == "__main__":
     parser.add_argument("--algorithm", default = 'forward_selection',
             choices = ['forward_selection', 'backward_elimination'],
             help="The search algorithm to use")
-    parser.add_argument("--test_file_path", default = "data/CS205_large_Data__1.txt",
+    parser.add_argument("--test_data", default = "./data/CS205_small_Data__25.txt",
             type = str,
-            help="TXT file to use for testing. E.g. data/eamonns_test_2.txt")
+            help="TXT file to use for testing. E.g. data/CS205_small_Data__25.txt")
     parser.add_argument("--debug", action = 'store_true',
             help="Flag if enabled adds debug information")
+    parser.add_argument("--normalize_data", action = 'store_true',
+            help="Flag if enabled normalizes data")
+    parser.add_argument("--norm_type", default = 'min_max',
+            choices = ['min_max', 'z_norm'],
+            help="The data normalilzation method to use")
     parser.add_argument("--k", default = 1,
             help="K value for the nearest-neighbor (NN) algorithm")
 
