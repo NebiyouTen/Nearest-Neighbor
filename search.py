@@ -11,6 +11,7 @@ def generate_combinations(N, k):
     return combinations
 
 def forward_search(feats, labels, args):
+    meta_data = {}
     total_features = feats.shape[1]
 
     features_idx = list(range(total_features))
@@ -42,6 +43,8 @@ def forward_search(feats, labels, args):
         features_idx.remove(beat_feat)
         best_feats.add(beat_feat)
 
+        meta_data[frozenset(best_feats)] = best_val
+
         if best_val > final_best_val:
              final_best_val = best_val
              final_best_feat = tuple(best_feats)
@@ -54,10 +57,11 @@ def forward_search(feats, labels, args):
 
     print("*"*15, "Final best val ", final_best_val, final_best_feat)
 
-    return final_best_val, final_best_feat
+    return final_best_val, final_best_feat, meta_data
 
 
 def backward_search(feats, labels, args):
+    meta_data = {}
     total_features = feats.shape[1]
 
     features_idx = list(range(total_features))
@@ -91,6 +95,8 @@ def backward_search(feats, labels, args):
         features_idx.remove(beat_feat)
         best_feats.remove(beat_feat)
 
+        meta_data[frozenset(best_feats)] = best_val
+
         if best_val > final_best_val:
              final_best_val = best_val
              final_best_feat = tuple(best_feats)
@@ -103,4 +109,4 @@ def backward_search(feats, labels, args):
 
     print("*"*15, "Final best val ", final_best_val, final_best_feat)
 
-    return final_best_val, final_best_feat
+    return final_best_val, final_best_feat, meta_data
