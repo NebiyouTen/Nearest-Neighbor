@@ -1,5 +1,10 @@
 # Nearest Neighbor
 
+
+python script_name.py --algorithm forward_selection --test_data ./data/sample_data.txt --debug --normalize_data --norm_type z_norm
+
+
+
 ## Help
 
 For more information and debug commands run with

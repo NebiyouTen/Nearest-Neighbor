@@ -32,7 +32,7 @@ class KNN(object):
         else: # default norm min,max
             self.data = self.data - self.data.min(axis=0, keepdims =True)
             self.data /=  (self.data.max(axis=0, keepdims =True) + 1e-8)
-
+    
     def dist(self, x_1, x_2):
         '''
             Given a feature 1xd compute distance
