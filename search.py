@@ -10,6 +10,10 @@ def generate_combinations(N, k):
 
     return combinations
 
+def freeze_set(_set_):
+    return frozenset({x + 1 for x in _set_})
+
+
 def forward_search(feats, labels, args):
     meta_data = {}
     total_features = feats.shape[1]
@@ -43,7 +47,7 @@ def forward_search(feats, labels, args):
         features_idx.remove(beat_feat)
         best_feats.add(beat_feat)
 
-        meta_data[frozenset(best_feats)] = best_val
+        meta_data[freeze_set(best_feats)] = best_val
 
         if best_val > final_best_val:
              final_best_val = best_val
@@ -95,7 +99,7 @@ def backward_search(feats, labels, args):
         features_idx.remove(beat_feat)
         best_feats.remove(beat_feat)
 
-        meta_data[frozenset(best_feats)] = best_val
+        meta_data[freeze_set(best_feats)] = best_val
 
         if best_val > final_best_val:
              final_best_val = best_val
