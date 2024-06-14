@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-small = np.loadtxt("data/CS205_small_Data__25.txt")
-large = np.loadtxt("data/CS205_large_Data__3.txt")
+small = np.loadtxt("/media/nyismaw/Data/Data/cs_205_project_2/CS205_small_Data__25.txt")
+large = np.loadtxt("/media/nyismaw/Data/Data/cs_205_project_2/CS205_large_Data__3.txt")
 
 class_lables, features = small[:,0], small[:,1:]
 class_lables_l, features_l = large[:,0], large[:,1:]
@@ -29,7 +29,7 @@ fig, ax = plt.subplots()
 
 bar_width = 0.2
 opacity = 0.8
-index = np.arange(num_features)
+index = np.arange(num_features) + 1
 
 bar1 = ax.bar(index - bar_width, min_vals, bar_width, alpha=opacity, color='b', label='Min')
 bar2 = ax.bar(index, max_vals, bar_width, alpha=opacity, color='r', label='Max')
@@ -64,7 +64,7 @@ fig, ax = plt.subplots(figsize=(12, 8))
 
 bar_width = 0.1
 opacity =1
-index = np.arange(num_features)
+index = np.arange(num_features) + 1
 
 bar1 = ax.bar(index - bar_width, min_vals, bar_width, alpha=opacity, color='b', label='Min')
 bar2 = ax.bar(index, max_vals, bar_width, alpha=opacity, color='r', label='Max')
